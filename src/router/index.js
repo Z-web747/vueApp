@@ -1,31 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
-const routes = [
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/Login/index.vue')
-  },
-  {
-    path: '/',
-    redirect: '/layout',
-  },
-  {
-    path: '/layout',
-    name: 'layout',
-    redirect: '/layout/home',
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/layout/home',
-        name: 'home',
-        component: () => import('@/views/Home/index.vue'),
-      }
-    ]
-  },
-]
-const router = createRouter({
-  history: createWebHistory(),
-  routes
+import router from './route'
+router.beforeEach((to,form,next) => {
+  if(to.name !== 'login' && !localStorage.token){
+    next('/login')
+  }
+  next()
 })
 export default router

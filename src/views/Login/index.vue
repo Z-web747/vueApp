@@ -32,6 +32,7 @@
 <script>
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
+import { login } from '@/api'
 export default{
   setup(){
     const loginFormRef = ref(null)
@@ -47,10 +48,15 @@ export default{
       },
       
     })
-    const toLogin = () => {
-      console.log(loginFormRef);
-      loginFormRef.value.validate((valid) => {
+    const toLogin = (loginFormRef) => {
+      loginFormRef.validate( valid => {
         if(valid){
+          login(state.loginForm).then(res => {
+            console.log(res);
+          }).catch(err => {
+            console.log(err);
+          })
+          return
           router.replace('/')
         }
       })
