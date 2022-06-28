@@ -18,7 +18,7 @@
         <el-form-item
           prop="password"
         >
-          <el-input style="width: 350px" v-model.trim="loginForm.password">
+          <el-input type="password" style="width: 350px" v-model.trim="loginForm.password">
           <template v-slot:prefix>
             <el-icon><Lock /></el-icon>
           </template>
@@ -33,6 +33,7 @@
 import { reactive, ref, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import { login } from '@/api'
+import { cookies } from '@/utils/cookie'
 export default{
   setup(){
     const loginFormRef = ref(null)
@@ -49,15 +50,15 @@ export default{
       
     })
     const toLogin = (loginFormRef) => {
-      loginFormRef.validate( valid => {
+      loginFormRef.validate( async valid => {
         if(valid){
-          login(state.loginForm).then(res => {
-            console.log(res);
-          }).catch(err => {
-            console.log(err);
-          })
-          return
-          router.replace('/')
+          const res = await login(state.loginForm)
+          console.log(res);
+          if(res.code === '0000'){
+            // console.log('success');
+            // cookies.set('token', res.data.token)
+            router.push('/')
+          }
         }
       })
     }

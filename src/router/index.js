@@ -1,8 +1,10 @@
 import router from './route'
+import Cookies from 'js-cookie'
 router.beforeEach((to,form,next) => {
-  if(to.name !== 'login' && !localStorage.token){
+  if(to.name !== 'login' && !Cookies.get('token')){
     next('/login')
+  }else{
+    next()
   }
-  next()
 })
 export default router

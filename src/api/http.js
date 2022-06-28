@@ -1,12 +1,12 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-
+import { cookies } from '@/utils/cookie'
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API_URL,
   timeout: 10000
 })
-console.dir(service);
 service.interceptors.request.use(config => {
+  config.headers['Auth'] = cookies.get('token') || ''
   console.log('请求拦截', config)
   return config
 }, (err) =>{
@@ -22,7 +22,6 @@ service.interceptors.response.use(response => {
 })
 
 export function get(url, params = {}){
-  service.get(url,{params})
   return new Promise((resolve, reject) => {
     service.get(url, { params }).then(res => {
       resolve(res)
